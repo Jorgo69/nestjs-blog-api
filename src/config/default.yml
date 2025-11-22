@@ -1,0 +1,25 @@
+database:
+  type: postgres
+  host: localhost
+  port: 5432
+  username: api_use
+  password: new_password
+  database: nest_api_bdd
+  synchronize: false
+  logging: true
+  entities:
+    - "dist/*/.entity{.ts,.js}"
+
+authorisation:
+  x-api-key: HP9X6hH9n00mMVToKZxGWr12Olwczav4Pj5
+
+server:
+  port: 3000
+
+app:
+  name: "Clone Facebook Nest JS"
+  version: "1.0.0"
+
+jwt:
+  secret: "secret"
+  expireIn: "30d"
