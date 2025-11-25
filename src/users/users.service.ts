@@ -35,8 +35,13 @@ export class UsersService {
     // Methode 2: Trouver un User par email
     async findOneByEmail(email: string){
         try {
-            // 1 - Utilisons le repository pour trouver
-            return await this.usersRepository.findOneByOrFail({email});
+            // Utiliser createQueryBuilder pour ajouter la colonne 'password'
+            const user = await this.usersRepository.createQueryBuilder('user')
+                .addSelect('user.password') // <-- DEMANDE EXPLICITE DU HASH
+                .where('user.email = :email', { email })
+                .getOneOrFail(); // Utiliser getOneOrFail pour lever une erreur si non trouvé
+
+            return user;
 
         } catch (error) {
             // Renvoie une erreur standard si l'utilisateur n'existe pas

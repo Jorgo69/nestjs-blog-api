@@ -1,11 +1,9 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
 
-export class LoginUserDTO{
+export class LoginUserDto{
     @IsNotEmpty({message: 'L\'email est requis'})
     @IsString()
-    @IsEmail({
-        blacklisted_chars: "!?#$%^&*(){}[]|\\/",
-    }, {
+    @IsEmail({}, {
         message: "L'adresse mail n'est pas valide",
     })
         email: string
