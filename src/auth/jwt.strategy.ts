@@ -30,5 +30,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     
     // Le contenu retourné est attaché à l'objet 'req.user'.
     return { userId: payload.sub, email: payload.email }; 
+    // return { userId: payload.sub, email: payload.email, role: payload.role }; // <--- AJOUTER LE RÔLE
   }
 }

@@ -31,7 +31,7 @@ export class Post {
     // TypeORM crée automatiquement la colonne 'authorId' dans cette table (Post).
     @ManyToOne(() => User, (user) => user.posts, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'authorId' }) // Assure que la colonne s'appelle bien 'authorId'
-    author: User;
+    authorId: User;
 
     // Relation PLUSIEURS-À-PLUSIEURS (Many-to-Many)
     // @JoinTable crée la table de jointure (pivot) 'post_categories_category'

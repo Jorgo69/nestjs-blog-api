@@ -52,7 +52,7 @@ export class User {
     categories: Category[];
 
     // Relation UN-À-PLUSIEURS : Un utilisateur peut créer plusieurs posts
-    @OneToMany(() => Post, (post) => post.author)
+    @OneToMany(() => Post, (post) => post.authorId)
     posts: Post[];
     
 }

@@ -46,29 +46,41 @@ export class PostsController {
     @Body() updatePostDto: UpdatePostDto,
     @Request() req: any
   ) {
+    // Contenu du token {jwt} ici le Id du User est voulu
     const userId = req.user.userId;
     // 1. Trouver le post existant pour vérifier l'auteur
     const existingPost = await this.postsService.findOne(postId);
 
     // 2. Vérification des droits (Autorisation)
     // On compare l'ID de l'utilisateur connecté (du token) avec l'ID de l'auteur du post
-    if (existingPost.author !== userId) {
+    if (existingPost.authorId !== userId) {
       // Si l'utilisateur n'est pas l'auteur, on lève une exception 403 Forbidden
       throw new ForbiddenException('Vous n\'êtes pas autorisé à modifier cet article.');
     }
 
-    const sameUser = req.user.userId === this.postsService.findOne(req.user.userId)
-    if(!sameUser){
-      return throw new NotFoundError('Vous avez pas le droit')
-    }
-    return this.postsService.update(id, updatePostDto);
+    // 3. Si l'utilisateur est l'auteur, on procède à la mise à jour
+    return this.postsService.update(postId, updatePostDto);
   }
 
   // --- 5. DELETE /posts/:id (Suppression) ---
   // @HttpCode(HttpStatus.NO_CONTENT) renvoie un statut 204 (Pas de contenu) pour une suppression réussie
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id') id: string) {
-    await this.postsService.remove(id);
+  @UseGuards(AuthGuard('jwt'))
+  async remove(@Param('id') postId: string, @Request() req: any) {
+    // verifie et prelever l'id du token
+    const userId = req.user.userId;
+
+    // on va comparer le de la requete a pour verifie si sa correct avec celui deja stocker en bdd
+    // a cause de postService qui est en Promesse donc Promise il est plus sur d'utiliser async et await ici
+    const existingPost = await this.postsService.findOne(postId);
+
+    if(existingPost.authorId !== userId){
+      throw new ForbiddenException('Vous n\'avez pas l\'autorisation pour supprimer ce post ');
+    }
+
+
+
+    await this.postsService.remove(postId);
   }
 }
